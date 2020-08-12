@@ -1,0 +1,23 @@
+{
+  "name": "napi_sdl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hu2prod/napi_sdl.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hu2prod/napi_sdl/issues"
+  },
+  "homepage": "https://github.com/hu2prod/napi_sdl#readme",
+  "dependencies": {
+    "node-gyp": "^7.0.0"
+  }
+}
