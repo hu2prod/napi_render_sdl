@@ -22,8 +22,8 @@ napi_value start_rgb(napi_env env, napi_callback_info info) {
     return ret_dummy;
   }
   
-  size_t argc = 2;
-  napi_value argv[2];
+  size_t argc = 3;
+  napi_value argv[3];
   status = napi_get_cb_info(env, info, &argc, argv, NULL, NULL);
   
   if (status != napi_ok) {
@@ -47,6 +47,14 @@ napi_value start_rgb(napi_env env, napi_callback_info info) {
     return ret_dummy;
   }
   
+  i32 use_bgr;
+  status = napi_get_value_int32(env, argv[2], &use_bgr);
+  
+  if (status != napi_ok) {
+    napi_throw_error(env, NULL, "Invalid i32 was passed as argument of use_bgr");
+    return ret_dummy;
+  }
+  
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_NOPARACHUTE) == -1) {
     napi_throw_error(env, NULL, "fail SDL_Init");
@@ -55,7 +63,7 @@ napi_value start_rgb(napi_env env, napi_callback_info info) {
   signal(SIGINT, SIG_DFL);
   signal(SIGTERM, SIG_DFL);
   
-  _display_screen = SDL_SetVideoMode(size_x, size_y, 24, SDL_HWSURFACE | SDL_FULLSCREEN);
+  _display_screen = SDL_SetVideoMode(size_x, size_y, 24, SDL_HWSURFACE | SDL_FULLSCREEN | SDL_ASYNCBLIT);
   if (_display_screen == NULL) {
     napi_throw_error(env, NULL, "fail SDL_SetVideoMode");
     return ret_dummy;
@@ -63,12 +71,16 @@ napi_value start_rgb(napi_env env, napi_callback_info info) {
   
   SDL_ShowCursor(0);
   
-  topLeft = SDL_CreateRGBSurface(0, size_x, size_y, 24,
-    0x0000ff, // rmask
-    0x00ff00, // gmask
-    0xff0000, // bmask
-    0  // amask
-  );
+  if (use_bgr) {
+    topLeft = SDL_CreateRGBSurface(0, size_x, size_y, 24, 0,0,0,0);
+  } else {
+    topLeft = SDL_CreateRGBSurface(0, size_x, size_y, 24,
+      0x0000ff, // rmask
+      0x00ff00, // gmask
+      0xff0000, // bmask
+      0  // amask
+    );
+  }
   
   set_size_x = size_x;
   set_size_y = size_y;
