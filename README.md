@@ -1,4 +1,5 @@
 # napi_sdl
+This is not full-featured SDL node module. This only renders buffer as pixel array to SDL surface\
 TODO some docs\
 just usage example
 
